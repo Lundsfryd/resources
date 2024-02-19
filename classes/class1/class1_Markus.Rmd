@@ -81,6 +81,7 @@ ggplot(hibbs, aes(x = growth, y = vote)) +
 These first exercises are about learning what simulating data is for.
 
 ## Ex. 0.a): In 1-2 sentences (discuss w group or reflect on your own): What does it mean to simulate data?
+create fake data following some parameters
 
 ## Ex. 0.b): Specify some amount of data points (n), some mean and some sd, and use rnorm() to simulate this amount of data points based off of the mean and sd you've set. 
 ```{r}
@@ -153,16 +154,82 @@ print(RegData)
 
 #### Ex. 1.2.b) Sketch hypothetical data with the same range of x but corresponding to the line y = 30 + 10x with residual standard deviation 10.
 
+```{r}
+intercept <- 30
+slope <- 10
+x_values <- seq(0,4)
+y_value <- intercept + slope*x_values
+error <- rnorm(5,0,10)
+y <- y_value + error
+
+hypdata <- data.frame(y,x_values)
+
+# Make scatterplot
+plot(hypdata$x_values, hypdata$y, xlab="stuff",
+ylab="what can be predicted by stuff")
+
+# Estimate regression y = a + bx + error
+RegData <- stan_glm(y ~ x_values, data=hypdata)
+
+# Add a fitted line to the graph
+abline(coef(RegData), col="gray") # needs to be run with the plot() code above - running the whole chunk is the easiest way
+
+# Display the fitted model
+print(RegData)
+```
+
+
 ### Ex. 1.5 Goals of regression: Give examples of applied statistics problems of interest to you in which the goals are:
 #### (a) Forecasting/classification
 
+
 #### (b) Exploring associations
+- 
 
 #### (c) Extrapolation
 
 #### (d) Causal inference
 
 ### Ex. 2.3 Data processing: Go to the data folder Names, find the file allnames_clean.csv and use this to make a graph similar to Figure 2.8, but for girls. 
+
+```{r}
+names <- read.csv("../data/Names/data/allnames_clean.csv")
+
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+
+girls_data <- names
+
+# Melt the data to long format
+girls_data_long <- girls_data %>%
+  gather(key = "year", value = "count", -name, -sex, -X) %>%
+  mutate(year = as.numeric(sub("X", "", year)))
+
+# Filter for girls
+girls_data_long <- filter(girls_data_long, sex == "F")
+
+# Extract the last letter from the names
+girls_data_long <- mutate(girls_data_long, last_letter = substr(name, nchar(name), nchar(name)))
+
+# Aggregate data by year and last letter
+aggregated_data <- girls_data_long %>%
+  group_by(year, last_letter) %>%
+  summarise(count = sum(count))
+
+# Create the ggplot graph
+ggplot(aggregated_data, aes(x = year, y = count, group = last_letter, color = last_letter)) +
+  geom_line() +
+  ggtitle("Trend of Girls' Names Based on Last Letter") +
+  xlab("Year") +
+  ylab("Count") +
+  theme_minimal()+
+  ylim(0, 900000)  # Adjust the range based on your preference
+
+
+```
+
+
 
 ### Ex. 2.7 (b) Reliability and validity: Give an example of a scenario of measurements that have reliability but not validity.
 
