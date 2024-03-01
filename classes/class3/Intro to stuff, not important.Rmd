@@ -1,0 +1,87 @@
+---
+title: "Classes"
+author: "Markus Lundsfryd Jensen"
+date: "2024-03-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(pacman)
+pacman::p_load(tidyverse)
+```
+
+Class stuff
+```{r}
+for (number in 1:10){
+  print(paste("This round, the number to be squared is:", number))
+  squared_number <- number^2
+  print(paste('The number squared is:',squared_number))
+}
+```
+
+while loops
+```{r}
+counter <- 1
+while (counter <=17){
+  print(paste("counter is currently:", counter))
+  counter <- counter +1
+}
+```
+
+if-else statements
+```{r}
+number <- 0
+
+if (number > 0){
+  print("positive number")
+} else if (number < 0){
+  print("Negative number")
+} else {
+  print(('Zero'))
+}
+
+#forloop with if else
+list_numbers <- c(4,-5,7-36,0)
+
+for (number in list_numbers) {
+  if (number > 0) {
+    print("positive number")
+  } else if (number < 0) {
+    print("Negative number")
+  } else {
+    print(('Zero'))
+  }
+}
+
+```
+
+
+
+function
+```{r}
+number_looper <- function(list_of_numbers) {
+  for (number in list_of_numbers) {
+    if (number > 0) {
+      print("positive number")
+    } else if (number < 0) {
+      print("Negative number")
+    } else {
+      print(('Zero'))
+    }
+  }
+  
+}
+  
+some_numbers <- c(3,-5,0,23)
+number_looper(some_numbers)
+```
+function to calculate area of rectangle
+```{r}
+calculate_area <- function(width,length_){
+  area <- width*length_
+  return(area)
+}
+calculate_area(4,2)
+```
+
